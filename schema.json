@@ -118,16 +118,16 @@
                   "value": {
                     "type": "string",
                     "description": "A value for a custom slot type"
+                  },
+                  "synonyms": {
+                    "type": "array",
+                    "description": "List of potential synonyms for a value of a custom slot type",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
                 "required": ["value"]
-              },
-              "synonyms": {
-                "type": "array",
-                "description": "List of potential synonyms for a value of a custom slot type",
-                "items": {
-                  "type": "string"
-                }
               }
             },
             "required": ["id", "name"]
