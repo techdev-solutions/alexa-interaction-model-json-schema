@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://techdev-solutions.github.io/alexa-interaction-model-json-schema/schema.json",
+  "title": "Alexa Skill Interaction Model Schema",
+  "description": "A JSON object describing the interaction model of an Alexa skill",
+  "type": "object",
+  "definitions": {
+    "InteractionModel": {
+      "type": "object",
+      "properties": {
+        "languageModel": {
+          "$ref": "#/definitions/LanguageModel"
+        },
+        "dialog": {
+          "$ref": "#/definitions/Dialog"
+        },
+        "prompts": {
+          "type": "array",
+          "description": "Cues to the user on behalf of the skill for eliciting data or providing feedback",
+          "items": {
+            "$ref": "#/definitions/Prompt"
+          }
+        }
+      },
+      "required": ["languageModel"]
+    },
+    "LanguageModel": {
+      "type": "object",
+      "description": "Conversational primitives for the skill",
+      "properties": {
+        "invocationName": {
+          "type": "string",
+          "description": "Invocation name of the skill"
+        },
+        "intents": {
+          "type": "array",
+          "description": "Intents and their slots",
+          "items": {
+            "$ref": "#/definitions/Intent"
+          }
+        },
+        "types": {
+          "type": "array",
+          "description": "Custom slot types",
+          "items": {
+            "$ref": "#/definitions/CustomType"
+          }
+        }
+      },
+      "required": ["invocationName", "intents"]
+    },
+    "Intent": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the intent"
+        },
+        "slots": {
+          "type": "array",
+          "description": "List of slots within the intent",
+          "items": {
+            "$ref": "#/definitions/IntentSlot"
+          }
+        },
+        "samples": {
+          "type": "array",
+          "description": "Sample utterances for the intent",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["name"]
+    },
+    "IntentSlot": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the slot"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the slot"
+        },
+        "samples": {
+          "type": "array",
+          "description": "Sample utterances for the slot",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["name", "type"]
+    },
+    "CustomType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the custom slot type"
+        },
+        "values": {
+          "type": "array",
+          "description": "List of representative values for the slot.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifier for a value of a custom slot type"
+              },
+              "name": {
+                "type": "object",
+                "description": "Describes a value of a custom slot type",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "A value for a custom slot type"
+                  }
+                },
+                "required": ["value"]
+              },
+              "synonyms": {
+                "type": "array",
+                "description": "List of potential synonyms for a value of a custom slot type",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["id", "name"]
+          }
+        }
+      },
+      "required": ["name", "values"]
+    },
+    "Dialog": {
+      "type": "object",
+      "description": "Rules for conducting a multi-turn dialog with the user",
+      "properties": {
+        "intents": {
+          "type": "array",
+          "description": "List of intents that have dialog rules associated with them.",
+          "items": {
+            "$ref": "#/definitions/DialogIntent"
+          }
+        },
+        "delegationStrategy": {
+          "type": "string",
+          "description": "Specifies whether dialogs in this skill should be automatically delegated to Alexa. This can be ALWAYS (auto-delegation is on for the overall skill) or SKILL_RESPONSE (auto-delegation is off for the overall skill). You can override this setting at the intent level.",
+          "enum": ["ALWAYS", "SKILL_RESPONSE"]
+        }
+      },
+      "required": ["intents"]
+    },
+    "DialogIntent": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the intent that has dialog rules"
+        },
+        "delegationStrategy": {
+          "type": "string",
+          "description": "Specifies whether the dialog for this intent should be automatically delegated to Alexa. This can be ALWAYS (auto-delegation is on for this intent) or SKILL_RESPONSE (auto-delegation is off for the intent). When this property is not present, the intent uses the skill-level delegationStrategy.",
+          "enum": ["ALWAYS", "SKILL_RESPONSE"]
+        },
+        "slots": {
+          "type": "array",
+          "description": "List of slots in this intent that have dialog rules",
+          "items": {
+            "$ref": "#/definitions/DialogIntentSlot"
+          }
+        },
+        "confirmationRequired": {
+          "type": "boolean",
+          "description": "Describes whether confirmation of the intent is required"
+        },
+        "prompts": {
+          "type": "object",
+          "description": "Collection of prompts for this intent",
+          "properties": {
+            "confirmation": {
+              "type": "string",
+              "description": "Enum value in the dialog_intents map to reference the confirmation prompt id"
+            }
+          }
+        }
+      },
+      "required": ["name"]
+    },
+    "DialogIntentSlot": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the slot in the dialog intent"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the slot in the dialog intent"
+        },
+        "elicitationRequired": {
+          "type": "boolean",
+          "description": "Describes whether elicitation of the slot is required"
+        },
+        "confirmationRequired": {
+          "type": "boolean",
+          "description": "Describes whether confirmation of the slot is required"
+        },
+        "prompts": {
+          "type": "object",
+          "description": "Collection of prompts for this slot",
+          "properties": {
+            "elicitation": {
+              "type": "string",
+              "description": "Enum value in the dialog_slots map to reference the elicitation prompt id"
+            },
+            "confirmation": {
+              "type": "string",
+              "description": "Enum value in the dialog_slots map to reference the confirmation prompt id"
+            }
+          }
+        },
+        "validation": {
+          "type": "array",
+          "description": "List of validation rules for this slot",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Enum value to reference the type of validation rule.",
+                "enum": [
+                  "hasEntityResolutionMatch",
+                  "isInSet",
+                  "isNotInSet",
+                  "isGreaterThan",
+                  "isGreaterThanOrEqualTo",
+                  "isLessThan",
+                  "isLessThanOrEqualTo",
+                  "isInDuration",
+                  "isNotInDuration"
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "description": "ID to reference the set of prompts for this validation rule"
+              },
+              "values": {
+                "type": "array",
+                "description": "The values parameter for the chosen validation"
+              },
+              "value": {
+                "type": "string",
+                "description": "The value parameter for the chosen validation"
+              },
+              "start": {
+                "type": "string",
+                "description": "The start parameter for a date validation"
+              },
+              "end": {
+                "type": "string",
+                "description": "The end parameter for a date validation"
+              }
+            },
+            "required": ["type", "prompt"]
+          }
+        }
+      },
+      "required": ["name", "type"]
+    },
+    "Prompt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier of the prompt"
+        },
+        "variations": {
+          "type": "array",
+          "description": "List of variations of the prompt.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["PlainText", "SSML"]
+              },
+              "value": {
+                "type": "string",
+                "description": "Text that Alexa says as a prompt."
+              }
+            },
+            "required": ["type", "value"]
+          }
+        }
+      },
+      "required": ["id", "variations"]
+    }
+  },
+  "properties": {
+    "interactionModel": {
+      "$ref": "#/definitions/InteractionModel"
+    }
+  }
+}
