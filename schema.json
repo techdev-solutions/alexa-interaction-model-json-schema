@@ -224,7 +224,7 @@
             }
           }
         },
-        "validation": {
+        "validations": {
           "type": "array",
           "description": "List of validation rules for this slot",
           "items": {
