@@ -20,12 +20,17 @@
         }
 
         .modal-dialog.modal-dialog-large {
-            max-width: 1200px;
+            max-width: var(--breakpoint-xl);
+        }
+
+        .modal-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-image {
             max-width: 100%;
-            justify-self: center;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -107,7 +112,9 @@
     <div class="modal-dialog modal-dialog-large" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <img class="modal-image"/>
+                <div class="modal-image-container">
+                    <img class="modal-image"/>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
